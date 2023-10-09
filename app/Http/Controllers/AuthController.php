@@ -2,6 +2,8 @@
 
 namespace App\Http\Controllers;
 
+use App\Http\Requests\LoginRequest;
+use App\Http\Requests\RegisterRequest;
 use App\Models\User;
 use Illuminate\Http\RedirectResponse;
 use Illuminate\Http\Request;
@@ -12,10 +14,12 @@ use Illuminate\View\View;
 
 class AuthController extends Controller
 {
-    public function login(Request $request): View|RedirectResponse
+    public function login(LoginRequest $request): View|RedirectResponse
     {
-        $email = $request->input('email');
-        $password = $request->input('password');
+        $validated = $request->validated();
+
+        $email = $validated['email'];
+        $password = $validated['password'];
 
         $credentials = [
             'email' => $email,
@@ -37,12 +41,14 @@ class AuthController extends Controller
         return Redirect::route('login');
     }
 
-    public function register(Request $request)
+    public function register(RegisterRequest $request)
     {
-        $name = $request->input('name');
-        $email = $request->input('email');
-        $password = $request->input('password');
-        $passwordAgain = $request->input('password_again');
+        $validated = $request->validated();
+
+        $name = $validated['name'];
+        $email = $validated['email'];
+        $password = $validated['password'];
+        $passwordAgain = $validated['password_again'];
 
         $messages = [];
 
